@@ -58,7 +58,7 @@ fn main() {
         } => {
             let socket = std::net::UdpSocket::bind(local_address).unwrap();
             // Get local_addr from socket in case of operating system allocated port for us.
-            println!("Client bound to {}...", socket.local_addr().unwrap());
+            println!("Client bound to {}", socket.local_addr().unwrap());
             send_message_to(&socket, &remote_address, Message::new(data.clone()));
             println!(
                 "Client sent '{}' to {}. Waiting back...",
