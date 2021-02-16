@@ -14,3 +14,7 @@ $ cargo run -- server
 Server listening 0.0.0.0:9047
 Server recieved: 'Hello word' from 87.237.40.162:40125. Sending back...
 ```
+
+## Network topology diagram
+
+![topology](images/topology.png)
