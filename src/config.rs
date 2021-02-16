@@ -5,6 +5,7 @@ pub enum Config {
         local_address: std::net::SocketAddr,
     },
     Client {
+        local_address: std::net::SocketAddr,
         remote_address: std::net::SocketAddr,
         data: String,
     },
@@ -47,6 +48,16 @@ pub fn parse_command_line() -> Config {
                         .validator(socket_addr_validator.clone()),
                 )
                 .arg(
+                    clap::Arg::with_name("local_address")
+                        .long("local-address")
+                        .short("l")
+                        .help("Local address to bind client socket")
+                        .required(true)
+                        .takes_value(true)
+                        .default_value("0.0.0.0:0")
+                        .validator(socket_addr_validator.clone()),
+                )
+                .arg(
                     clap::Arg::with_name("data")
                         .long("data")
                         .short("d")
@@ -67,6 +78,11 @@ pub fn parse_command_line() -> Config {
             return Config::Server { local_address };
         }
         ("client", Some(client_matches)) => {
+            let local_address: std::net::SocketAddr = client_matches
+                .value_of("local_address")
+                .unwrap()
+                .parse()
+                .unwrap();
             let remote_address: std::net::SocketAddr = client_matches
                 .value_of("remote_address")
                 .unwrap()
@@ -74,6 +90,7 @@ pub fn parse_command_line() -> Config {
                 .unwrap();
             let data = client_matches.value_of("data").unwrap().to_string();
             return Config::Client {
+                local_address,
                 remote_address,
                 data,
             };
