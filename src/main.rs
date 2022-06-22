@@ -19,7 +19,11 @@ fn recv_message_from(
     return Ok(RecievedMessage { msg, peer });
 }
 
-fn send_message_to(socket: &std::net::UdpSocket, peer: &std::net::SocketAddr, msg: Message) {
+fn send_message_to(
+    socket: &std::net::UdpSocket,
+    peer: &std::net::SocketAddr,
+    msg: Message,
+) {
     socket.send_to(&msg.encode().unwrap(), peer).unwrap();
 }
 
