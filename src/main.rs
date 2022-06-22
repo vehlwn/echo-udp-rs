@@ -52,16 +52,18 @@ fn main() {
             }
         }
         config::Config::Client {
+            local_address,
             remote_address,
             data,
         } => {
-            // Allow an operating system to choose local port for us.
-            let socket = std::net::UdpSocket::bind("0.0.0.0:0").unwrap();
+            let socket = std::net::UdpSocket::bind(local_address).unwrap();
+            // Get local_addr from socket in case of operating system allocated port for us.
+            println!("Client bound to {}...", socket.local_addr().unwrap());
+            send_message_to(&socket, &remote_address, Message::new(data.clone()));
             println!(
                 "Client sent '{}' to {}. Waiting back...",
                 data, remote_address
             );
-            send_message_to(&socket, &remote_address, Message::new(data));
             match recv_message_from(&socket) {
                 Ok(recieved) => {
                     println!("Client recieved: '{}'.", recieved.msg.s);
