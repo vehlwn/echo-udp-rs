@@ -56,7 +56,7 @@ fn main() {
             data,
         } => {
             // Allow an operating system to choose local port for us.
-            let socket = std::net::UdpSocket::bind("127.0.0.1:0").unwrap();
+            let socket = std::net::UdpSocket::bind("0.0.0.0:0").unwrap();
             println!(
                 "Client sent '{}' to {}. Waiting back...",
                 data, remote_address
