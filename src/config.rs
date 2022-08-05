@@ -1,14 +1,17 @@
 use clap;
 
+pub struct ServerConfig {
+    pub local_address: std::net::SocketAddr,
+}
+
+pub struct ClientConfig {
+    pub local_address: std::net::SocketAddr,
+    pub remote_address: std::net::SocketAddr,
+    pub data: String,
+}
 pub enum Config {
-    Server {
-        local_address: std::net::SocketAddr,
-    },
-    Client {
-        local_address: std::net::SocketAddr,
-        remote_address: std::net::SocketAddr,
-        data: String,
-    },
+    Server(ServerConfig),
+    Client(ClientConfig),
 }
 
 pub fn parse_command_line() -> Config {
@@ -75,7 +78,7 @@ pub fn parse_command_line() -> Config {
                 .unwrap()
                 .parse()
                 .unwrap();
-            return Config::Server { local_address };
+            return Config::Server(ServerConfig { local_address });
         }
         ("client", Some(client_matches)) => {
             let local_address: std::net::SocketAddr = client_matches
@@ -89,11 +92,11 @@ pub fn parse_command_line() -> Config {
                 .parse()
                 .unwrap();
             let data = client_matches.value_of("data").unwrap().to_string();
-            return Config::Client {
+            return Config::Client(ClientConfig {
                 local_address,
                 remote_address,
                 data,
-            };
+            });
         }
         (x, _x_matches) => {
             panic!("Unknown subcommand: '{}'", x);
